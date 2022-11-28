@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Tasks{% endblock %}
+
+
+{% block content%}
+{% if user.is_staff %}
+<div>
+  <h2 style="margin: 50px 50px">Run task:</h2>
+  <ol>
+    <li><a href="{% url 'main:layout_bd' %}">Congratulate birthdays</a></li>
+    <li style="padding-top: 15px">
+      <form action="{% url 'main:send_news' %}" method="post">
+        {% csrf_token %}
+      <select name="section">
+        <option value="1">New films</option>
+        <option value="2">New music</option>
+        <option value="3">Sports news</option>
+      </select>
+        <button>Send</button>
+        </form>
+    </li>
+  </ol>
+</div>
+{% else %}
+<h2 style="text-align: center">Permisson denied</h2>
+{% endif %}
+{% endblock%}

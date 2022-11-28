@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Layout 1{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; margin-top: 1%">Layout 1</h2>
+<div style="width: 30%; margin-left:35%; margin-top: 30px; ">
+  <h4 class="display-6">Dear {{ full_name}} !</h4>
+    <img src="{{ image_url }}" width="0" height="0" border="0" >
+    <p>Today {{ birth_day }}, we wish you a happy birthday and give you a 15% discount on your next purchase.</p>
+    <a href="#"> Choose a gift with a discount</a>
+</div>
+{% endblock %}
+

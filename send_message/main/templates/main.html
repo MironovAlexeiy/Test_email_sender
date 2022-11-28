@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Main page{% endblock %}
+
+
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {% if not user.is_authenticated %}
+        <a href="{% url 'main:login' %}" class="btn btn-primary" role="button" style="position:absolute; top:5px; right:5px;">Login</a>
+      {% else %}
+        {% if user.is_staff %}
+            <a href="{% url 'main:tasks' %}" class="btn btn-primary" role="button" style="position:absolute; top:5px; right:100px;">Send Email</a>
+            <a href="{% url 'main:logout' %}" class="btn btn-primary" role="button" style="position:absolute; top:5px; right:5px;">Logout</a>
+        {% else %}
+            <a href="{% url 'main:logout' %}" class="btn btn-primary" role="button" style="position:absolute; top:5px; right:5px;">Logout</a>
+        {% endif %}
+      {% endif %}
+  </div>
+</nav>
+<h1 style="text-align: center; margin-top: 20px; color: cadetblue">Welcome to the site "Useful mailing list"</h1>
+<h3 style="text-align: center; margin-top: 10px">To receive news on the selected categories, you must register and subscribe to the desired news</h3>
+<div class="card-deck" style="width: 90%; margin-top: 15px; margin-left: 5%">
+{% for subs in subscriptions %}
+  <div class="card">
+    <img class="card-img-top" src="{{ subs.image.url }}" alt="{{ subs.title}}" width="349" height="180">
+    <div class="card-body">
+      <h5 class="card-title" style="text-align: center; color: darkseagreen">{{ subs.title }}</h5>
+    </div>
+    <div class="card-footer" style="text-align: center">
+      {% if not user.is_authenticated %}
+            <a href="{% url 'main:registration' subs.pk %}" class="btn btn-primary" role="button">Register and subscribe</a>
+      {% endif %}
+      {% if user.is_authenticated %}
+              {% if subs in user.subscriptions.all %}
+                <form action="{% url 'main:unsubs' subs.id %}" method="post">
+                    {% csrf_token %}
+                  <button class="btn btn-primary">UNSubscribe</button>
+                </form>
+                    {% else %}
+                        <form action="{% url 'main:insubs' subs.id user.id %}" method="post">
+                            {% csrf_token %}
+                          <button class="btn btn-primary">Subscribe</button>
+                        </form>
+              {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+ </div>
+{% endblock %}
