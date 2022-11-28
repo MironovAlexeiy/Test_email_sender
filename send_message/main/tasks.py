@@ -45,12 +45,15 @@ def send_unsubscribed_mail(user_email, user_name, subscription):
     )
 
 
-@app.task
-def send_hb_email(template, subject, email, context):
+@app.task(bind=True, default_retry_delay=5*60)
+def send_hb_email(self, template, subject, email, context):
     html_msg = get_template(template).render(context)
     msg = EmailMessage(subject, html_msg, to=(email, ), from_email=EMAIL_HOST_USER)
     msg.content_subtype = 'html'
-    msg.send()
+    try:
+        msg.send()
+    except Exception as ex:
+        raise self.retry(exc=ex, countdown=60)
 
 
 

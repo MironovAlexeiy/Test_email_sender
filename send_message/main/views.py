@@ -141,6 +141,7 @@ class SendNews(MyMixin, View):
             }
             try:
                 send_subs_email.delay(template, subject, email, context)
+                # send_subs_email.apply_async((template, subject, email, context), countdown=60)
                 new_track = MailTrack(email=email)
                 new_track.save()
             except:
