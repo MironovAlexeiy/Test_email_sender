@@ -1,7 +1,7 @@
 from django.template.loader import render_to_string, get_template
 from send_message.celery import app
 from django.core.mail import send_mail, EmailMessage
-from send_message.settings import EMAIL_HOST_USER
+from send_message.settings import EMAIL_HOST_USER, PROJECT_DOMAIN
 from .models import User
 
 @app.task
@@ -63,3 +63,22 @@ def send_subs_email(template, subject, email, context):
     msg = EmailMessage(subject, html_msg, to=(email,), from_email=EMAIL_HOST_USER)
     msg.content_subtype = 'html'
     msg.send()
+
+@app.task
+def send_every_day():
+    subject = 'Every day message'
+    html_msg = get_template('layouts/send_every_day.html')
+    for u in User.objects.all().exclude(email=''):
+        context = {
+            'first_name': u.first_name,
+            'last_name': u.last_name,
+            'birth_day': u.birth_day,
+            'image_url': PROJECT_DOMAIN + '/open-email/?pk={}'.format(u.pk)
+        }
+        html_msg.render(context)
+        msg = EmailMessage(subject, html_msg, to=(u.email, ), from_email=EMAIL_HOST_USER)
+        msg.content_subtype = 'html'
+        try:
+            msg.send()
+        except Exception as ex:
+            print ex

@@ -144,16 +144,15 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 #smpt
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'   #for testing email opening
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'YouEmail'
 EMAIL_HOST_PASSWORD = 'YouPassword'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 PROJECT_DOMAIN = 'Some-domain'
 
-#for testing email opening
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

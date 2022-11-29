@@ -15,7 +15,7 @@ app.autodiscover_tasks()
 #for run: celery -A send_message beat -l info
 app.conf.beat_schedule = {                       # Defining pending tasks
     'send-email-every-day': {
-        'task': 'main.tasks.send_subs_email',
+        'task': 'main.tasks.send_every_day',
         'schedule': crontab(minute=0, hour='9, 21')
     }
 }
